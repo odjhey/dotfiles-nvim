@@ -55,6 +55,14 @@ map("n", "fq", "<cmd>Telescope quickfix<CR>", { desc = "quick fix" })
 map("n", "fj", "<cmd>Telescope jumplist<CR>", { desc = "jump list" })
 map("n", "fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
 
+-- hunks
+map("n", "<leader>gp", "<cmd>lua require('gitsigns').preview_hunk()<CR>", { desc = "Preview hunk" })
+map("n", "<leader>ga", "<cmd>lua require('gitsigns').stage_hunk()<CR>", { desc = "Stage hunk" })
+map("n", "<leader>gu", "<cmd>lua require('gitsigns').undo_stage_hunk()<CR>", { desc = "Undo stage hunk" })
+map("n", "<leader>gr", "<cmd>lua require('gitsigns').reset_hunk()<CR>", { desc = "Reset hunk" })
+map("n", "]c", "<cmd>lua require('gitsigns').next_hunk()<CR>", { desc = "Next Hunk" })
+map("n", "[c", "<cmd>lua require('gitsigns').prev_hunk()<CR>", { desc = "Prev Hunk" })
+
 -- Buffers
 local nomap = vim.keymap.del
 nomap("n", "<leader>x")
