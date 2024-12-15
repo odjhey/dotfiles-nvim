@@ -50,24 +50,35 @@ vim.keymap.set("n", "<leader>ff", function()
 end, { desc = "Find files in set directory" })
 
 map("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>")
-map("n", "fs", "<cmd>Telescope grep_string<CR>", { desc = "grep_string" })
-map("n", "fq", "<cmd>Telescope quickfix<CR>", { desc = "quick fix" })
-map("n", "fj", "<cmd>Telescope jumplist<CR>", { desc = "jump list" })
-map("n", "fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
+map("n", "<leader>fs", "<cmd>Telescope grep_string<CR>", { desc = "grep_string" })
+map("n", "<leader>fq", "<cmd>Telescope quickfix<CR>", { desc = "quick fix" })
+map("n", "<leader>fj", "<cmd>Telescope jumplist<CR>", { desc = "jump list" })
+map("n", "<leader>fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
 
 -- hunks
 map("n", "<leader>gp", "<cmd>lua require('gitsigns').preview_hunk()<CR>", { desc = "Preview hunk" })
 map("n", "<leader>ga", "<cmd>lua require('gitsigns').stage_hunk()<CR>", { desc = "Stage hunk" })
 map("n", "<leader>gu", "<cmd>lua require('gitsigns').undo_stage_hunk()<CR>", { desc = "Undo stage hunk" })
 map("n", "<leader>gr", "<cmd>lua require('gitsigns').reset_hunk()<CR>", { desc = "Reset hunk" })
-map("n", "]c", "<cmd>lua require('gitsigns').next_hunk()<CR>", { desc = "Next Hunk" })
-map("n", "[c", "<cmd>lua require('gitsigns').prev_hunk()<CR>", { desc = "Prev Hunk" })
+map("n", "]h", "<cmd>lua require('gitsigns').next_hunk()<CR>", { desc = "Next Hunk" })
+map("n", "[h", "<cmd>lua require('gitsigns').prev_hunk()<CR>", { desc = "Prev Hunk" })
+
+local nomap = vim.keymap.del
 
 -- Buffers
-local nomap = vim.keymap.del
 nomap("n", "<leader>x")
 nomap("n", "<leader>b")
 map("n", "<leader>bo", ":%bd|e#<CR>", { noremap = true, silent = true, desc = "Close Other Buffers" })
+
+-- Override
+map("n", "gR", "<cmd>Trouble lsp_references<CR>", { desc = "Find references using Trouble" })
+
+vim.keymap.set("n", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
+vim.keymap.set("n", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
+
+-- remove terminal mappings
+nomap("n", "<leader>h")
+nomap("n", "<leader>v")
 
 map(
   "n",

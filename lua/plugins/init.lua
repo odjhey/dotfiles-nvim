@@ -54,7 +54,7 @@ return {
         desc = "Symbols (Trouble)",
       },
       {
-        "<leader>tL",
+        "<leader>tr",
         "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
         desc = "LSP Definitions / references / ... (Trouble)",
       },
@@ -94,8 +94,55 @@ return {
   },
 
   {
+    "nvim-treesitter/playground",
+    cmd = "TSPlaygroundToggle",
+  },
+
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          init_selection = "vz",
+          node_incremental = "z",
+          scope_incremental = "va",
+          node_decremental = "Z",
+        },
+      },
+      textobjects = {
+        select = {
+          enable = true,
+          keymaps = {
+            ["af"] = "@function.outer", -- Select around a function
+            ["if"] = "@function.inner", -- Select inside a function
+            ["ac"] = "@class.outer", -- Select around a class
+            ["ic"] = "@class.inner", -- Select inside a class
+            ["ab"] = "@block.outer", -- Select around braces
+            ["ib"] = "@block.inner", -- Select inside braces
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true, -- Track jumps in the jump list
+          goto_next_start = {
+            ["]f"] = "@function.outer", -- Jump to next function
+            ["]c"] = "@class.outer", -- Jump to next class
+          },
+          goto_previous_start = {
+            ["[f"] = "@function.outer", -- Jump to previous function
+            ["[c"] = "@class.outer", -- Jump to previous class
+          },
+          goto_next_end = {
+            ["]F"] = "@function.outer", -- Jump to end of next function
+            ["]C"] = "@class.outer", -- Jump to end of next class
+          },
+          goto_previous_end = {
+            ["[F"] = "@function.outer", -- Jump to end of previous function
+            ["[C"] = "@class.outer", -- Jump to end of previous class
+          },
+        },
+      },
       ensure_installed = {
         "vim",
         "lua",
@@ -105,6 +152,9 @@ return {
         "javascript",
         "typescript",
       },
+    },
+    dependencies = {
+      { "nvim-treesitter/nvim-treesitter-textobjects" },
     },
   },
 
@@ -123,12 +173,38 @@ return {
 
   {
     "folke/todo-comments.nvim",
+    lazy = false,
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
       -- your configuration comes here
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
       TODO = { icon = " ", color = "info", alt = { "@todo" } },
+    },
+  },
+
+  -- use flash for now
+  -- {
+  --   "smoka7/hop.nvim",
+  --   lazy = false,
+  --   version = "*",
+  --   opts = {
+  --     keys = "asdfghjkl;weruioxcvnm,",
+  --   },
+  -- },
+
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    ---@type Flash.Config
+    opts = {},
+    -- stylua: ignore
+    keys = {
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter({ jump = {pos = "start" }}) end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
   },
 
