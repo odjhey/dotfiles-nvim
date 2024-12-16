@@ -18,6 +18,11 @@ return {
   },
 
   {
+    "andymass/vim-matchup",
+    lazy = false,
+  },
+
+  {
     "neovim/nvim-lspconfig",
     config = function()
       require("nvchad.configs.lspconfig").defaults()
@@ -152,6 +157,11 @@ return {
         "javascript",
         "typescript",
       },
+      matchup = {
+        enable = true, -- mandatory, false will disable the whole extension
+        disable = { "c", "ruby" }, -- optional, list of language that will be disabled
+        -- [options]
+      },
     },
     dependencies = {
       { "nvim-treesitter/nvim-treesitter-textobjects" },
@@ -206,6 +216,12 @@ return {
       { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
       { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
+  },
+
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
   },
 
   -- themes

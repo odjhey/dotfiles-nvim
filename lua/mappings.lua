@@ -2,6 +2,8 @@ require "nvchad.mappings"
 
 local map = vim.keymap.set
 
+-- @todo modify descriptions to show well in the cheatsheet, format is desc = "group desc"
+
 vim.g.telescope_search_dir = nil -- Initialize the variable
 vim.keymap.set("n", "<leader>fd", function()
   require("telescope.builtin").find_files {
@@ -69,6 +71,8 @@ local nomap = vim.keymap.del
 nomap("n", "<leader>x")
 nomap("n", "<leader>b")
 map("n", "<leader>bo", ":%bd|e#<CR>", { noremap = true, silent = true, desc = "Close Other Buffers" })
+map("n", "<leader>bx", ":%bd<CR>", { noremap = true, silent = true, desc = "Close Buffer" })
+map("n", "<leader>bl", "<cmd>Telescope buffers<CR>", { desc = "List Buffers" })
 
 -- Override
 map("n", "gR", "<cmd>Trouble lsp_references<CR>", { desc = "Find references using Trouble" })
@@ -125,3 +129,21 @@ local user = {
 for key, value in pairs(user.n) do
   map("n", key, value[1], { desc = value[2] })
 end
+
+local harpoon = require "harpoon"
+-- REQUIRED
+harpoon:setup()
+-- REQUIRED
+
+-- stylua: ignore start
+vim.keymap.set("n", "<leader>hh", function() harpoon:list():add() end, { desc = "Add mark to harpoon" })
+vim.keymap.set("n", "<leader>hl", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "list harpoons" })
+vim.keymap.set("n", "<C-h>", function() harpoon:list():prev() end, { desc = "prev harpoon" })
+vim.keymap.set("n", "<C-l>", function() harpoon:list():next() end, { desc = "next harpoon" })
+vim.keymap.set("n", "<leader>hp", function() harpoon:list():prev() end, { desc = "prev harpoon" })
+vim.keymap.set("n", "<leader>hn", function() harpoon:list():next() end, { desc = "next harpoon" })
+vim.keymap.set("n", "<leader>h1", function() harpoon:list():select(1) end, {desc ="select harpoon 1"})
+vim.keymap.set("n", "<leader>h2", function() harpoon:list():select(2) end, {desc ="select harpoon 2"})
+vim.keymap.set("n", "<leader>h3", function() harpoon:list():select(3) end, {desc ="select harpoon 3"})
+vim.keymap.set("n", "<leader>h4", function() harpoon:list():select(4) end, {desc ="select harpoon 4"})
+-- stylua: ignore end
