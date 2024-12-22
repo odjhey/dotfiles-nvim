@@ -4,6 +4,9 @@ require "nvchad.mappings"
 local map = vim.keymap.set
 local nomap = vim.keymap.del
 
+-- we need <c-i> and apparently, tab is <c-i> in terminal
+nomap("n", "<TAB>")
+
 local function telescope()
   vim.g.telescope_search_dir = nil -- Initialize the variable
   vim.keymap.set("n", "<leader>fd", function()
@@ -126,12 +129,11 @@ telescope()
 
 -- finders
 map("n", "<leader>fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
-map("n", "<leader>fs", "<cmd>Telescope grep_string<CR>", { desc = "grep_string" })
+map("n", "<leader>fs", "<cmd>Telescope lsp_document_symbols<CR>", { desc = "grep_string" })
 map("n", "<leader>fq", "<cmd>Telescope quickfix<CR>", { desc = "quick fix" })
 map("n", "<leader>fj", "<cmd>Telescope jumplist<CR>", { desc = "jump list" })
 map("n", "<leader>fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
 map("n", "<leader>0", "<cmd>Telescope resume<CR>", { desc = "telescope resume" })
-map("n", "<leader>l", "<cmd>Telescope lsp_document_symbols<CR>", { desc = "telescope symbols" })
 map("n", "<c-t>", "<cmd>Telescope<CR>", { desc = "telescope open" })
 
 -- quick fix

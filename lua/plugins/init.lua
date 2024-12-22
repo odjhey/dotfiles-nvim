@@ -52,36 +52,61 @@ return {
           height = 15,
         },
       },
+      modes = {
+        symbols_f = {
+          desc = "document symbols",
+          mode = "lsp_document_symbols",
+          focus = false,
+          win = { position = "right" },
+          filter = {
+            -- remove Package since luals uses it for control flow structures
+            ["not"] = { ft = "lua", kind = "Package" },
+            any = {
+              -- all symbol kinds for help / markdown files
+              ft = { "help", "markdown" },
+              -- default set of symbol kinds
+              kind = {
+                "Function",
+              },
+            },
+          },
+        },
+      },
     },
     cmd = "Trouble",
     keys = {
       {
-        "<leader>tt",
+        "<leader>xx",
         "<cmd>Trouble diagnostics toggle<cr>",
         desc = "Diagnostics (Trouble)",
       },
       {
-        "<leader>tT",
+        "<leader>xf",
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
         desc = "Buffer Diagnostics (Trouble)",
       },
       {
-        "<leader>ts",
+        "<leader>xss",
         "<cmd>Trouble symbols toggle focus=false<cr>",
         desc = "Symbols (Trouble)",
       },
       {
-        "<leader>tr",
+        "<leader>xsf",
+        "<cmd>Trouble symbols_f toggle focus=false<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>xr",
         "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
         desc = "LSP Definitions / references / ... (Trouble)",
       },
       {
-        "<leader>tl",
+        "<leader>xl",
         "<cmd>Trouble loclist toggle<cr>",
         desc = "Location List (Trouble)",
       },
       {
-        "<leader>tq",
+        "<leader>xq",
         "<cmd>Trouble qflist toggle<cr>",
         desc = "Quickfix List (Trouble)",
       },
