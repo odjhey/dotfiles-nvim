@@ -21,8 +21,12 @@ lspconfig.denols.setup {
   capabilities = capabilities,
 }
 
+local navic = require "nvim-navic"
 lspconfig.ts_ls.setup {
-  on_attach = on_attach,
+  on_attach = function(client, bufnr)
+    navic.attach(client, bufnr)
+    on_attach(client, bufnr)
+  end,
   root_dir = lspconfig.util.root_pattern "package.json",
   single_file_support = false,
   on_init = on_init,

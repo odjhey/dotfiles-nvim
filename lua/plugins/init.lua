@@ -381,4 +381,34 @@ return {
   { "bluz71/vim-moonfly-colors" },
   { "sainnhe/sonokai" },
   { "ellisonleao/gruvbox.nvim" },
+
+  -- breadcrumbs
+  {
+    "SmiteshP/nvim-navic",
+    lazy = false,
+    dependencies = { "neovim/nvim-lspconfig" }, -- Ensure LSP is configured
+  },
+  {
+    "SmiteshP/nvim-navbuddy",
+    dependencies = {
+      "SmiteshP/nvim-navic",
+      "MunifTanjim/nui.nvim",
+    },
+    opts = { lsp = { auto_attach = true } },
+    lazy = false,
+  },
+  {
+    "utilyre/barbecue.nvim",
+    name = "barbecue",
+    version = "*",
+    config = function()
+      require("barbecue").setup {
+        theme = "auto", -- Try to match your colorscheme automatically
+      }
+    end,
+    dependencies = {
+      "SmiteshP/nvim-navic",
+      "nvim-tree/nvim-web-devicons", -- optional dependency
+    },
+  },
 }

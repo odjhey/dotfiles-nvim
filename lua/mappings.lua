@@ -7,6 +7,7 @@ local nomap = vim.keymap.del
 -- we need <c-i> and apparently, tab is <c-i> in terminal
 nomap("n", "<TAB>")
 
+map("n", "<leader>sf", ":Navbuddy<CR>", { desc = "Open NavBuddy" })
 local function telescope()
   vim.g.telescope_search_dir = nil -- Initialize the variable
   vim.keymap.set("n", "<leader>fd", function()
@@ -155,6 +156,8 @@ nomap("n", "<leader>b")
 map("n", "<leader>bo", ":%bd|e#<CR>", { noremap = true, silent = true, desc = "Close Other Buffers" })
 map("n", "<leader>bd", ":bd<CR>", { noremap = true, silent = true, desc = "Close Buffer" })
 map("n", "<leader>bl", "<cmd>Telescope buffers<CR>", { desc = "List Buffers" })
+map("n", "<leader>bn", ":bnext<CR>", { desc = "Next Buffer" })
+map("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous Buffer" })
 
 -- Override
 -- i don't think we're using this, we're mostly on <l>tt
