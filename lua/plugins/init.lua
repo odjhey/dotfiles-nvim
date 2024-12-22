@@ -1,8 +1,13 @@
 return {
+  {
+    "nvim-lua/plenary.nvim",
+    lazy = false,
+  },
 
   -- formatter
   {
     "stevearc/conform.nvim",
+    enable = false,
     config = function()
       require "configs.conform"
     end,
@@ -30,7 +35,14 @@ return {
     end,
   },
 
-  { "tpope/vim-surround", lazy = false },
+  {
+    "tpope/vim-surround",
+    lazy = false,
+    config = function()
+      -- Visual Mode: Use S to surround the selection
+      vim.api.nvim_set_keymap("x", "S", "<Plug>VSurround", { noremap = false, silent = true })
+    end,
+  },
   {
     "folke/trouble.nvim",
     opts = {
@@ -84,6 +96,9 @@ return {
         "tailwindcss-language-server",
         "eslint_d",
         "prettierd",
+        "eslint-lsp",
+        "markdown-oxide",
+        "biome",
       },
     },
   },
@@ -91,6 +106,12 @@ return {
   {
     "tpope/vim-fugitive",
     lazy = false,
+  },
+
+  {
+    "tpope/vim-rhubarb",
+    lazy = false,
+    dependencies = { "tpope/vim-fugitive" },
   },
 
   {
@@ -156,6 +177,7 @@ return {
         "css",
         "javascript",
         "typescript",
+        "tsx",
       },
       matchup = {
         enable = true, -- mandatory, false will disable the whole extension
@@ -166,6 +188,25 @@ return {
     dependencies = {
       { "nvim-treesitter/nvim-treesitter-textobjects" },
     },
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    lazy = false,
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("nvim-ts-autotag").setup {
+        opts = {
+          enable_close = true, -- Auto close tags
+          enable_rename = true, -- Auto rename pairs of tags
+          enable_close_on_slash = false, -- Auto close on trailing </
+        },
+        per_filetype = {
+          ["html"] = {
+            enable_close = true,
+          },
+        },
+      }
+    end,
   },
 
   {
@@ -184,13 +225,29 @@ return {
   {
     "folke/todo-comments.nvim",
     lazy = false,
-    dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
-      TODO = { icon = " ", color = "info", alt = { "@todo" } },
+      keywords = {
+        TODO = { icon = " ", color = "info", alt = { "todo" } },
+      },
+      merge_keywords = true, -- when true, custom keywords will be merged with the defaults
+      highlight = {
+        pattern = [[(KEYWORDS)]], -- Match `@todo`, `todo`, and similar patterns
+      },
     },
+  },
+
+  -- use fork, i_c-o is broken
+  { "folke/which-key.nvim", enabled = false },
+  {
+    "odjhey/which-key.nvim",
+    enabled = true,
+    branch = "fix/broken_i_c_o_mark_others",
+    keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
+    cmd = "WhichKey",
+    opts = function()
+      dofile(vim.g.base46_cache .. "whichkey")
+      return {}
+    end,
   },
 
   -- use flash for now
@@ -210,11 +267,46 @@ return {
     opts = {},
     -- stylua: ignore
     keys = {
-      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter({ jump = {pos = "start" }}) end, desc = "Flash Treesitter" },
-      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+      {
+        "S",
+        mode = { "n", "o" },
+        function()
+          require("flash").jump()
+        end,
+        desc = "Flash",
+      },
+      {
+        "s",
+        mode = { "n", "o" },
+        function()
+          require("flash").treesitter() -- { jump = {pos = "start" }} -- use o to go end and start { labels = "hjkluionm," }
+        end,
+        desc = "Flash Treesitter",
+      },
+      {
+        "r",
+        mode = "o",
+        function()
+          require("flash").remote()
+        end,
+        desc = "Remote Flash",
+      },
+      {
+        "R",
+        mode = { "o", "x" },
+        function()
+          require("flash").treesitter_search()
+        end,
+        desc = "Treesitter Search",
+      },
+      {
+        "<c-s>",
+        mode = { "c" },
+        function()
+          require("flash").toggle()
+        end,
+        desc = "Toggle Flash Search",
+      },
     },
   },
 
@@ -224,10 +316,44 @@ return {
     dependencies = { "nvim-lua/plenary.nvim" },
   },
 
+  {
+    "bkad/camelcasemotion",
+    lazy = false,
+    config = function()
+      vim.cmd "nmap <silent> <M-w> <Plug>CamelCaseMotion_w"
+      vim.cmd "nmap <silent> <M-b> <Plug>CamelCaseMotion_b"
+      vim.cmd "nmap <silent> <M-e> <Plug>CamelCaseMotion_e"
+      vim.cmd "omap <silent> <M-w> <Plug>CamelCaseMotion_w"
+      vim.cmd "omap <silent> <M-b> <Plug>CamelCaseMotion_b"
+      vim.cmd "omap <silent> <M-e> <Plug>CamelCaseMotion_e"
+      vim.cmd "xmap <silent> <M-w> <Plug>CamelCaseMotion_w"
+      vim.cmd "xmap <silent> <M-b> <Plug>CamelCaseMotion_b"
+      vim.cmd "xmap <silent> <M-e> <Plug>CamelCaseMotion_e"
+    end,
+  },
+
+  {
+    "nvim-telescope/telescope-file-browser.nvim",
+    dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+  },
+
+  {
+    "sindrets/diffview.nvim",
+    lazy = false,
+    config = function()
+      dofile(vim.g.base46_cache .. "diffview")
+      require("diffview").setup()
+    end,
+  },
+
+  -- disable, this breaks c-o insert mode
+  { "windwp/nvim-autopairs", enabled = false },
+
   -- themes
   { "bkegley/gloombuddy" },
   { "vigoux/oak" },
   { "mhartington/oceanic-next" },
   { "bluz71/vim-moonfly-colors" },
   { "sainnhe/sonokai" },
+  { "ellisonleao/gruvbox.nvim" },
 }

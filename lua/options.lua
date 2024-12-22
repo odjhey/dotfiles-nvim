@@ -11,3 +11,4 @@ o.listchars = "tab:▸\\ ,trail:·,extends:>,precedes:<,nbsp:␣"
 o.foldmethod = "expr"
 o.foldexpr = "nvim_treesitter#foldexpr()"
 o.foldlevel = 999
+o.scrolloff = 2
