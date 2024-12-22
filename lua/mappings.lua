@@ -48,11 +48,10 @@ local function telescope()
 
   vim.keymap.set("n", "<leader>fw", function()
     local dir = vim.g.telescope_search_dir
-    local word = vim.fn.expand "<cword>"
     if dir then
-      require("telescope.builtin").live_grep { search_dirs = { dir }, default_text = word }
+      require("telescope.builtin").live_grep { search_dirs = { dir } }
     else
-      require("telescope.builtin").live_grep { default_text = word }
+      require("telescope.builtin").live_grep {}
     end
   end, { desc = "Live grep in set directory" })
 
@@ -133,6 +132,7 @@ map("n", "<leader>fj", "<cmd>Telescope jumplist<CR>", { desc = "jump list" })
 map("n", "<leader>fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
 map("n", "<leader>0", "<cmd>Telescope resume<CR>", { desc = "telescope resume" })
 map("n", "<leader>l", "<cmd>Telescope lsp_document_symbols<CR>", { desc = "telescope symbols" })
+map("n", "<c-t>", "<cmd>Telescope<CR>", { desc = "telescope open" })
 
 -- quick fix
 map("n", "<leader>ccl", ":ccl<CR>", { noremap = true, silent = true, desc = "Close quickfix" })
