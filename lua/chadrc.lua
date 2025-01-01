@@ -5,7 +5,7 @@
 local M = {}
 
 M.base46 = {
-  theme = "gruvchad", -- default theme
+  theme = "aquarium", -- default theme
   integrations = { "diffview", "telescope", "treesitter", "lsp" },
 }
 

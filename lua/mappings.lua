@@ -165,6 +165,12 @@ map("n", "gR", "<cmd>Trouble lsp_references<CR>", { desc = "Find references usin
 
 vim.keymap.set("n", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
 vim.keymap.set("n", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
+vim.keymap.set(
+  "n",
+  "<C-h>",
+  "<cmd>lua require('barbecue.ui').navigate(-2)<CR>",
+  { noremap = true, desc = "Eat a Piece of your BBQ" }
+)
 
 -- remove terminal mappings
 nomap("n", "<leader>h")
@@ -218,10 +224,8 @@ harpoon:setup()
 -- REQUIRED
 
 -- stylua: ignore start
-vim.keymap.set("n", "<leader>ha", function() harpoon:list():add() end, { desc = "Add mark to harpoon" })
-vim.keymap.set("n", "<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "list harpoons" })
-vim.keymap.set("n", "<C-h>", function() harpoon:list():prev() end, { desc = "prev harpoon" })
-vim.keymap.set("n", "<C-l>", function() harpoon:list():next() end, { desc = "next harpoon" })
+vim.keymap.set("n", "<leader>hh", function() harpoon:list():add() end, { desc = "Add mark to harpoon" })
+vim.keymap.set("n", "<leader>hl", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "list harpoons" })
 vim.keymap.set("n", "<leader>hp", function() harpoon:list():prev() end, { desc = "prev harpoon" })
 vim.keymap.set("n", "<leader>hn", function() harpoon:list():next() end, { desc = "next harpoon" })
 vim.keymap.set("n", "<leader>h1", function() harpoon:list():select(1) end, {desc ="select harpoon 1"})
