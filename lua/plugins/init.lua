@@ -406,34 +406,16 @@ return {
     },
     lazy = false,
     config = function()
-      -- Helper function to get highlight colors
       local function get_hl_color(group, attr)
         local hl = vim.api.nvim_get_hl(0, { name = group }) -- Neovim 0.9+ API
         return hl and hl[attr] and string.format("#%06x", hl[attr]) or nil
       end
-
-      -- Get the foreground color of the "Normal" highlight group
       local normal_fg = get_hl_color("Normal", "fg")
-      local dimmed_fg = get_hl_color("Comment", "fg")
-      local bold_fg = get_hl_color("Directory", "fg")
-      local separator_fg = get_hl_color("VertSplit", "fg")
 
       require("barbecue").setup {
         create_autocmd = false, -- prevent barbecue from updating itself automatically
         theme = {
-          -- This highlight is used to override other highlights
-          -- (e.g., basename will look like this: { fg = "#c0caf5", bold = true })
           normal = { fg = normal_fg },
-
-          -- These highlights correspond to symbols table from config
-          ellipsis = { fg = dimmed_fg },
-          separator = { fg = separator_fg },
-          modified = { fg = dimmed_fg },
-
-          -- These highlights represent the _text_ of three main parts of barbecue
-          dirname = { fg = dimmed_fg },
-          basename = { fg = bold_fg, bold = true },
-          context = { fg = normal_fg },
         },
       }
 
