@@ -35,12 +35,23 @@ return {
     end,
   },
 
+  -- use nvim-surround
+  -- {
+  --   "tpope/vim-surround",
+  --   lazy = false,
+  --   config = function()
+  --     -- Visual Mode: Use S to surround the selection
+  --     vim.api.nvim_set_keymap("x", "S", "<Plug>VSurround", { noremap = false, silent = true })
+  --   end,
+  -- },
   {
-    "tpope/vim-surround",
-    lazy = false,
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
     config = function()
-      -- Visual Mode: Use S to surround the selection
-      vim.api.nvim_set_keymap("x", "S", "<Plug>VSurround", { noremap = false, silent = true })
+      require("nvim-surround").setup {
+        -- Configuration here, or leave empty to use defaults
+      }
     end,
   },
   {
