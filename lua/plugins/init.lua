@@ -7,7 +7,7 @@ return {
   -- formatter
   {
     "stevearc/conform.nvim",
-    enable = false,
+    lazy = false,
     config = function()
       require "configs.conform"
     end,
@@ -419,7 +419,12 @@ return {
       "SmiteshP/nvim-navic",
       "MunifTanjim/nui.nvim",
     },
-    opts = { lsp = { auto_attach = true } },
+    opts = {
+      window = {
+        size = "70%",
+      },
+      lsp = { auto_attach = true },
+    },
   },
   {
     "utilyre/barbecue.nvim",
