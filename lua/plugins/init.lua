@@ -135,6 +135,8 @@ return {
         "eslint-lsp",
         "markdown-oxide",
         "biome",
+        "json-lsp",
+        "yaml-language-server",
       },
     },
   },
@@ -464,5 +466,15 @@ return {
         end,
       })
     end,
+  },
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "nvim-telescope/telescope.nvim",
+    },
+    config = true,
+    cmd = "Neogit",
   },
 }

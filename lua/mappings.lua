@@ -149,6 +149,7 @@ map("n", "]g", "<cmd>lua require('gitsigns').next_hunk()<CR>", { desc = "Next Hu
 map("n", "[g", "<cmd>lua require('gitsigns').prev_hunk()<CR>", { desc = "Prev Hunk" })
 map("n", "<leader>gA", "<cmd>DiffviewOpen<CR>", { desc = "Stage hunk" })
 map("n", "<leader>gf", "<cmd>Git add %<CR>", { desc = "Add file" })
+map("n", "<leader>gg", "<cmd>Neogit<CR>", { desc = "Git Neogit" })
 
 -- Buffers
 nomap("n", "<leader>x")
