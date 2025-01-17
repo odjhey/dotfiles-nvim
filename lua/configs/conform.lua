@@ -5,7 +5,7 @@ local function use_biome()
 end
 
 local function ifHasBiome(def)
-  return use_biome() and { "biome" } or def
+  return use_biome() and vim.list_extend(vim.deepcopy(def), { "biome" }) or def
 end
 
 local options = {
@@ -19,6 +19,7 @@ local options = {
     typescript = ifHasBiome { "prettierd" },
     javascriptreact = ifHasBiome { "prettierd" },
     typescriptreact = ifHasBiome { "prettierd" },
+    json = ifHasBiome {},
 
     -- comment this for now to see how eslint-lsp works
     -- javascript = { "eslint_d", "prettierd" },
