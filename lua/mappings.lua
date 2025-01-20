@@ -153,6 +153,21 @@ map(
   "<cmd>lua vim.diagnostic.setqflist()<CR>",
   { noremap = true, silent = true, desc = "Quickfix: All Diagnostics" }
 )
+map("n", "<leader>cc", [[<cmd>lua ToggleQuickfix()<CR>]], { noremap = true, silent = true, desc = "Quickfix: Toggle" })
+function ToggleQuickfix()
+  local quickfix_open = false
+  for _, win in ipairs(vim.fn.getwininfo()) do
+    if win.quickfix == 1 then
+      quickfix_open = true
+      break
+    end
+  end
+  if quickfix_open then
+    vim.cmd "cclose"
+  else
+    vim.cmd "copen"
+  end
+end
 
 -- hunks
 map("n", "<leader>gp", "<cmd>lua require('gitsigns').preview_hunk()<CR>", { desc = "Preview hunk" })

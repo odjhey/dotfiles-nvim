@@ -477,6 +477,8 @@ return {
     config = true,
     cmd = "Neogit",
   },
+
+  -- we use this to have an editable quickfixlist, use :w after edit
   {
     "stevearc/quicker.nvim",
     event = "FileType qf",
