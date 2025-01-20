@@ -138,7 +138,21 @@ map("n", "<leader>0", "<cmd>Telescope resume<CR>", { desc = "telescope resume" }
 map("n", "<c-t>", "<cmd>Telescope<CR>", { desc = "telescope open" })
 
 -- quick fix
-map("n", "<leader>ccl", ":ccl<CR>", { noremap = true, silent = true, desc = "Close quickfix" })
+map("n", "<leader>co", ":copen<CR>", { noremap = true, silent = true, desc = "quickfix open" })
+map("n", "<leader>cx", "<cmd>cclose<CR>", { noremap = true, silent = true, desc = "Quickfix: Close" })
+map("n", "<leader>cr", "<cmd>call setqflist([])<CR>", { noremap = true, silent = true, desc = "Quickfix: Clear" })
+map(
+  "n",
+  "<leader>ce",
+  "<cmd>lua vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR })<CR>",
+  { noremap = true, silent = true, desc = "Quickfix: Only Errors" }
+)
+map(
+  "n",
+  "<leader>cd",
+  "<cmd>lua vim.diagnostic.setqflist()<CR>",
+  { noremap = true, silent = true, desc = "Quickfix: All Diagnostics" }
+)
 
 -- hunks
 map("n", "<leader>gp", "<cmd>lua require('gitsigns').preview_hunk()<CR>", { desc = "Preview hunk" })
@@ -225,8 +239,8 @@ harpoon:setup()
 -- REQUIRED
 
 -- stylua: ignore start
-vim.keymap.set("n", "<leader>hh", function() harpoon:list():add() end, { desc = "Add mark to harpoon" })
-vim.keymap.set("n", "<leader>hl", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "list harpoons" })
+vim.keymap.set("n", "<leader>ha", function() harpoon:list():add() end, { desc = "Add mark to harpoon" })
+vim.keymap.set("n", "<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "list harpoons" })
 vim.keymap.set("n", "<leader>hp", function() harpoon:list():prev() end, { desc = "prev harpoon" })
 vim.keymap.set("n", "<leader>hn", function() harpoon:list():next() end, { desc = "next harpoon" })
 vim.keymap.set("n", "<leader>h1", function() harpoon:list():select(1) end, {desc ="select harpoon 1"})
