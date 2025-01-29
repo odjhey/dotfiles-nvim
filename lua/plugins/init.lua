@@ -402,12 +402,23 @@ return {
   { "windwp/nvim-autopairs", enabled = false },
 
   -- themes
-  { "bkegley/gloombuddy" },
-  { "vigoux/oak" },
-  { "mhartington/oceanic-next" },
-  { "bluz71/vim-moonfly-colors" },
-  { "sainnhe/sonokai" },
-  { "ellisonleao/gruvbox.nvim" },
+  -- { "bkegley/gloombuddy" },
+  -- { "vigoux/oak" },
+  -- { "mhartington/oceanic-next" },
+  -- { "bluz71/vim-moonfly-colors" },
+  -- { "sainnhe/sonokai" },
+  -- { "ellisonleao/gruvbox.nvim" },
+  -- { "NLKNguyen/papercolor-theme" },
+  -- { "catppuccin/nvim", name = "catppuccin" },
+  {
+    "Shatur/neovim-ayu",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.o.background = "dark" -- or "light" for light mode
+      vim.cmd [[colorscheme ayu-dark]]
+    end,
+  },
 
   -- breadcrumbs
   {

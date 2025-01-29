@@ -85,50 +85,11 @@ local function telescope()
       }
     end
   end, { desc = "Find files in set directory" })
-
-  vim.keymap.set("n", "<leader>fg", function()
-    local telescope = require "telescope.builtin"
-    local action_state = require "telescope.actions.state"
-    local actions = require "telescope.actions"
-
-    -- Step 1: Find files and collect all visible results
-    -- @todo prolly good idea to move to using https://github.com/nvim-telescope/telescope-file-browser.nvim
-    telescope.find_files {
-      search_dirs = { vim.g.telescope_search_dir },
-      attach_mappings = function(prompt_bufnr, _)
-        actions.select_default:replace(function()
-          local picker = action_state.get_current_picker(prompt_bufnr)
-          local results = {}
-
-          -- Safely collect only visible (filtered) results
-          for entry in picker.manager:iter() do
-            table.insert(results, entry[1])
-          end
-
-          actions.close(prompt_bufnr)
-
-          -- Debug: Log the number of results
-          local count = #results
-          vim.notify("Filtered file count: " .. count, vim.log.levels.INFO)
-
-          -- Step 2: Perform live_grep scoped to the exact files
-          if #results > 0 then
-            telescope.live_grep {
-              search_dirs = results, -- Use the collected file paths
-            }
-          else
-            vim.notify("No files found to grep.", vim.log.levels.WARN)
-          end
-        end)
-
-        return true
-      end,
-    }
-  end, { noremap = true, silent = true })
 end
 telescope()
 
 -- finders
+nomap("n", "<leader>gt")
 map("n", "<leader>fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
 map("n", "<leader>fs", "<cmd>Telescope lsp_document_symbols<CR>", { desc = "grep_string" })
 map("n", "<leader>fq", "<cmd>Telescope quickfix<CR>", { desc = "quick fix" })
@@ -136,6 +97,8 @@ map("n", "<leader>fj", "<cmd>Telescope jumplist<CR>", { desc = "jump list" })
 map("n", "<leader>fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
 map("n", "<leader>0", "<cmd>Telescope resume<CR>", { desc = "telescope resume" })
 map("n", "<c-t>", "<cmd>Telescope<CR>", { desc = "telescope open" })
+map("n", "<leader>bb", "<cmd>Telescope buffers<CR>", { desc = "telescope buffers" })
+map("n", "<leader>fc", "<cmd>Telescope git_status<CR>", { desc = "telescope git_status" })
 
 -- quick fix
 map("n", "<leader>co", ":copen<CR>", { noremap = true, silent = true, desc = "quickfix open" })
@@ -205,6 +168,9 @@ vim.keymap.set(
 -- remove terminal mappings
 nomap("n", "<leader>h")
 nomap("n", "<leader>v")
+nomap("n", "<M-i>")
+nomap("n", "<M-v>")
+nomap("n", "<M-h>")
 
 map(
   "n",
@@ -269,5 +235,18 @@ vim.keymap.set("i", "<C-n>", function()
   require("cmp").mapping.complete()()
 end, { noremap = true, silent = true })
 
+map("n", "<leader>rm", "<cmd>make<CR>", { desc = "run make" })
+
 -- not sure where to add this
 require("telescope").load_extension "file_browser"
+
+function Set_makeprg(script_path)
+  local config_path = vim.fn.stdpath "config"
+  local full_path = config_path .. "/compile-scripts/" .. script_path
+  if vim.fn.filereadable(full_path) == 1 then
+    vim.o.makeprg = full_path
+    print("makeprg set to: " .. full_path)
+  else
+    print("Error: Script not found at " .. full_path)
+  end
+end
