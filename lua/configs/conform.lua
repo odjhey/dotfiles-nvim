@@ -28,6 +28,14 @@ local options = {
     -- typescriptreact = { "eslint_d", "prettierd" },
   },
 
+  formatters = {
+    biome = {
+      args = { "check", "--write", "--stdin-file-path", "$FILENAME" },
+      -- Make sure that the formatter reads from stdin
+      stdin = true,
+    },
+  },
+
   format_on_save = {
     -- These options will be passed to conform.format()
     timeout_ms = 500,

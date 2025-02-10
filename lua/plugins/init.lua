@@ -141,16 +141,9 @@ return {
     },
   },
 
-  {
-    "tpope/vim-fugitive",
-    lazy = false,
-  },
-
-  {
-    "tpope/vim-rhubarb",
-    lazy = false,
-    dependencies = { "tpope/vim-fugitive" },
-  },
+  -- both for git stuff, rhubarb is for github
+  { "tpope/vim-fugitive", lazy = false },
+  { "tpope/vim-rhubarb", lazy = false, dependencies = { "tpope/vim-fugitive" } },
 
   {
     "github/copilot.vim",
@@ -297,7 +290,7 @@ return {
     keys = { "<leader>", "<c-w>", '"', "'", "`", "c", "v", "g" },
     cmd = "WhichKey",
     opts = function()
-      dofile(vim.g.base46_cache .. "whichkey")
+      -- dofile(vim.g.base46_cache .. "whichkey")
       return {}
     end,
   },
@@ -390,6 +383,20 @@ return {
   },
 
   {
+    "nvim-telescope/telescope-frecency.nvim",
+    lazy = false,
+    -- install the latest stable version
+    version = "*",
+    opts = {
+      matcher = "fuzzy",
+    },
+    dependencies = { "nvim-telescope/telescope.nvim" },
+    config = function()
+      require("telescope").load_extension "frecency"
+    end,
+  },
+
+  {
     "sindrets/diffview.nvim",
     lazy = false,
     config = function()
@@ -413,12 +420,23 @@ return {
   {
     "Shatur/neovim-ayu",
     lazy = false,
-    priority = 1000,
+    priority = 1000, -- recommended if you use tairiki as your default theme
     config = function()
       vim.o.background = "dark" -- or "light" for light mode
       vim.cmd [[colorscheme ayu-dark]]
     end,
   },
+  -- {
+  --   "deparr/tairiki.nvim",
+  --   lazy = false,
+  --   priority = 1000, -- recommended if you use tairiki as your default theme
+  --   branch = "v2",
+  --   opts = {},
+  --   config = function()
+  --     vim.o.background = "dark" -- or "light" for light mode
+  --     vim.cmd [[colorscheme retrobox]]
+  --   end,
+  -- },
 
   -- breadcrumbs
   {
@@ -434,7 +452,7 @@ return {
     },
     opts = {
       window = {
-        size = "70%",
+        size = "60%",
       },
       lsp = { auto_attach = true },
     },
@@ -449,17 +467,8 @@ return {
     },
     lazy = false,
     config = function()
-      local function get_hl_color(group, attr)
-        local hl = vim.api.nvim_get_hl(0, { name = group }) -- Neovim 0.9+ API
-        return hl and hl[attr] and string.format("#%06x", hl[attr]) or nil
-      end
-      local normal_fg = get_hl_color("Normal", "fg")
-
       require("barbecue").setup {
         create_autocmd = false, -- prevent barbecue from updating itself automatically
-        theme = {
-          normal = { fg = normal_fg },
-        },
       }
 
       vim.api.nvim_create_autocmd({
@@ -496,5 +505,14 @@ return {
     ---@module "quicker"
     ---@type quicker.SetupOptions
     opts = {},
+  },
+
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    cmd = "Telescope",
+    opts = function()
+      return require "configs.telescope"
+    end,
   },
 }

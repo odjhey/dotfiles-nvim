@@ -6,8 +6,8 @@ local nomap = vim.keymap.del
 
 -- we need <c-i> and apparently, tab is <c-i> in terminal
 nomap("n", "<TAB>")
-
 map("n", "<leader>sf", ":Navbuddy<CR>", { desc = "Open NavBuddy" })
+
 local function telescope()
   vim.g.telescope_search_dir = nil -- Initialize the variable
   vim.keymap.set("n", "<leader>fd", function()
@@ -68,7 +68,8 @@ local function telescope()
     end
   end, { desc = "Live grep in set directory" })
 
-  vim.keymap.set("n", "<leader>ff", function()
+  -- swap ff and c-p for now, to test frecency
+  vim.keymap.set("n", "<c-p>", function()
     local dir = vim.g.telescope_search_dir
     local Path = require "plenary.path"
     local relpath = Path:new(dir):make_relative(vim.fn.getcwd())
@@ -99,6 +100,12 @@ map("n", "<leader>0", "<cmd>Telescope resume<CR>", { desc = "telescope resume" }
 map("n", "<c-t>", "<cmd>Telescope<CR>", { desc = "telescope open" })
 map("n", "<leader>bb", "<cmd>Telescope buffers<CR>", { desc = "telescope buffers" })
 map("n", "<leader>fc", "<cmd>Telescope git_status<CR>", { desc = "telescope git_status" })
+map(
+  "n",
+  "<leader>ff",
+  "<cmd>Telescope frecency workspace=CWD theme=ivy previewer=false<CR>",
+  { desc = "telescope open" }
+)
 
 -- quick fix
 map("n", "<leader>co", ":copen<CR>", { noremap = true, silent = true, desc = "quickfix open" })
