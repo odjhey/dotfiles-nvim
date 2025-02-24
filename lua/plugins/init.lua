@@ -23,6 +23,11 @@ return {
   },
 
   {
+    "tpope/vim-dispatch",
+    cmd = { "Dispatch", "Make", "Focus", "Start" },
+  },
+
+  {
     "andymass/vim-matchup",
     lazy = false,
   },

@@ -37,8 +37,8 @@ local function telescope()
 
         -- Add a custom function to set the directory to '.'
         local function set_to_dot()
-          vim.g.telescope_search_dir = "."
-          print "Search directory set to: . (current directory)"
+          vim.g.telescope_search_dir = vim.fn.getcwd()
+          print("Search directory set to: " .. vim.fn.getcwd() .. " (current directory)")
           actions.close(prompt_bufnr)
         end
         -- Map a custom key (e.g., <C-d>) to select '.'
@@ -165,6 +165,8 @@ map("n", "gR", "<cmd>Trouble lsp_references<CR>", { desc = "Find references usin
 
 vim.keymap.set("n", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
 vim.keymap.set("n", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
+vim.keymap.set("x", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
+vim.keymap.set("x", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
 vim.keymap.set(
   "n",
   "<C-h>",
@@ -191,6 +193,14 @@ map(
   ':lua require("custom.swap_index_file").swap_source_index()<CR>',
   { noremap = true, silent = true }
 )
+
+map("n", "<leader>tn", ":tabn<CR>", { noremap = true, desc = "Tab next" })
+map("n", "<leader>tp", ":tabp<CR>", { noremap = true, desc = "Tab prev" })
+map("n", "<leader>tx", ":tabclose<CR>", { noremap = true, desc = "Tab close" })
+map("n", "<leader>tx", ":tabclose<CR>", { noremap = true, desc = "Tab close" })
+map("n", "<leader>t1", ":1tabn<CR>", { noremap = true, desc = "Tab 1" })
+map("n", "<leader>t2", ":2tabn<CR>", { noremap = true, desc = "Tab 2" })
+map("n", "<leader>t3", ":3tabn<CR>", { noremap = true, desc = "Tab 3" })
 
 local user = {
   n = {
@@ -257,3 +267,37 @@ function Set_makeprg(script_path)
     print("Error: Script not found at " .. full_path)
   end
 end
+
+vim.keymap.set("n", "gx", function()
+  local url = vim.fn.expand "<cfile>" -- Extract file:// URL under cursor
+
+  -- Match file URL, line (`#L14`), and column (`%2C13`)
+  local filepath, line, col = url:match "^file://([^#]+)#L?(%d*)%%?2C?(%d*)"
+
+  if filepath then
+    -- Decode URL (basic decoding for spaces: %20 → " ")
+    filepath = filepath:gsub("%%20", " ")
+
+    -- Open file, but defer buffer focus to prevent race conditions
+    vim.cmd("edit " .. vim.fn.fnameescape(filepath))
+
+    -- Schedule buffer switch to ensure the correct file is focused
+    vim.schedule(function()
+      local bufnr = vim.fn.bufnr(filepath)
+      if bufnr > 0 then
+        vim.cmd("buffer " .. bufnr)
+      end
+
+      -- Move to line and column after buffer is loaded
+      if line ~= "" then
+        vim.cmd(":" .. line)
+      end
+      if col ~= "" then
+        vim.cmd("normal! " .. col .. "|")
+      end
+    end)
+  else
+    -- Fallback to default gx behavior if not a file:// link
+    vim.cmd "silent execute 'norm! gx'"
+  end
+end, { silent = true, desc = "Open file:// links in Neovim with line and column support" })
