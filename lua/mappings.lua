@@ -456,3 +456,6 @@ end
 
 -- Set the mapping: <leader>fg will run our function.
 vim.keymap.set("n", "<leader>fg", T.compare_branch_diff_files, { desc = "Compare branch and open diff files" })
+
+-- lol sometimes i don't want to overwrite my yank register when pasting over text
+map("x", "<leader>p", '"_dP', { desc = "Paste without overwriting yank register" })
