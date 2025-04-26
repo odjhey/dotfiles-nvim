@@ -324,3 +324,62 @@ vim.keymap.set("n", "gx", function()
     vim.cmd "silent execute 'norm! gx'"
   end
 end, { silent = true, desc = "Open file:// links in Neovim with line and column support" })
+
+local function jump_file_history()
+  -- File history table and index.
+  local file_history = {}
+  local file_history_index = 0
+
+  -- Add a file to the history. If we're not at the end of the history,
+  -- remove forward entries (like a typical jump list).
+  local function add_file_to_history(file)
+    if #file_history > 0 and file_history[file_history_index] == file then
+      return
+    end
+    if file_history_index < #file_history then
+      for i = #file_history, file_history_index + 1, -1 do
+        table.remove(file_history, i)
+      end
+    end
+    table.insert(file_history, file)
+    file_history_index = #file_history
+  end
+
+  -- Autocommand to add the current file to our history on BufEnter.
+  vim.api.nvim_create_autocmd("BufEnter", {
+    callback = function()
+      local file = vim.fn.expand "%:p"
+      if file ~= "" then
+        add_file_to_history(file)
+      end
+    end,
+  })
+
+  -- Jump back in the file history.
+  local function jump_back_file()
+    if file_history_index > 1 then
+      file_history_index = file_history_index - 1
+      local file = file_history[file_history_index]
+      vim.cmd("edit " .. vim.fn.fnameescape(file))
+    else
+      print "No previous file in history"
+    end
+  end
+
+  -- Jump forward in the file history.
+  local function jump_forward_file()
+    if file_history_index < #file_history then
+      file_history_index = file_history_index + 1
+      local file = file_history[file_history_index]
+      vim.cmd("edit " .. vim.fn.fnameescape(file))
+    else
+      print "No next file in history"
+    end
+  end
+
+  -- Map keys to jump between files.
+  vim.keymap.set("n", "<leader>o", jump_back_file, { desc = "JumpFileHistory back in file history" })
+  vim.keymap.set("n", "<leader>i", jump_forward_file, { desc = "JumpFileHistory forward in file history" })
+end
+
+jump_file_history()

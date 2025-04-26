@@ -5,6 +5,27 @@ local capabilities = require("nvchad.configs.lspconfig").capabilities
 local lspconfig = require "lspconfig"
 local servers = { "html", "cssls", "biome", "yamlls", "jsonls" }
 
+-- do not steal focus on current window on gr
+vim.lsp.handlers["textDocument/references"] = function(err, result, ctx, config)
+  if err then
+    vim.notify("LSP references error: " .. err, vim.log.levels.ERROR)
+    return
+  end
+  if not result or vim.tbl_isempty(result) then
+    vim.notify("No references found", vim.log.levels.INFO)
+    return
+  end
+
+  -- Turn the locations into quickfix list entries
+  local items = vim.lsp.util.locations_to_items(result, config)
+  vim.fn.setqflist({}, "r", { title = "LSP References", items = items })
+
+  -- Open quickfix…
+  vim.cmd "silent copen"
+  -- …then jump focus back to your code window
+  vim.cmd "wincmd p"
+end
+
 -- lsps with default config
 for _, lsp in ipairs(servers) do
   lspconfig[lsp].setup {
