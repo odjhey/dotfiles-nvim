@@ -18,7 +18,11 @@ return {
       n = { ["q"] = require("telescope.actions").close },
     },
   },
-
+  pickers = {
+    live_grep = {
+      theme = "dropdown",
+    },
+  },
   extensions_list = { "themes", "terms" },
   extensions = {
     frecency = {

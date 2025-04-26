@@ -89,6 +89,11 @@ local function telescope()
 end
 telescope()
 
+vim.keymap.set("n", "<leader>fi", function()
+  local current_dir = vim.fn.expand "%:p:h"
+  require("telescope.builtin").find_files { cwd = current_dir }
+end, { desc = "Telescope find in current file's dir" })
+
 -- finders
 nomap("n", "<leader>gt")
 map("n", "<leader>fr", "<cmd>Telescope lsp_references<CR>", { desc = "lsp references" })
@@ -108,6 +113,8 @@ map(
 )
 
 -- quick fix
+map("n", "<C-H>", ":cpf<CR>", { noremap = true, silent = true, desc = "quickfix prev file" })
+map("n", "<C-L>", ":cnf<CR>", { noremap = true, silent = true, desc = "quickfix next file" })
 map("n", "<leader>co", ":copen<CR>", { noremap = true, silent = true, desc = "quickfix open" })
 map("n", "<leader>cx", "<cmd>cclose<CR>", { noremap = true, silent = true, desc = "Quickfix: Close" })
 map("n", "<leader>cr", "<cmd>call setqflist([])<CR>", { noremap = true, silent = true, desc = "Quickfix: Clear" })
@@ -138,6 +145,12 @@ function ToggleQuickfix()
     vim.cmd "copen"
   end
 end
+map(
+  "n",
+  "<leader>cv",
+  "<cmd>call setqflist([{ 'filename': expand('%:p'), 'lnum': line('.'), 'col': col('.'), 'text': getline('.') }], 'a')<CR>",
+  { noremap = true, silent = true, desc = "Quickfix: Add cursor" }
+)
 
 -- hunks
 map("n", "<leader>gp", "<cmd>lua require('gitsigns').preview_hunk()<CR>", { desc = "Preview hunk" })
@@ -163,16 +176,26 @@ map("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous Buffer" })
 -- i don't think we're using this, we're mostly on <l>tt
 map("n", "gR", "<cmd>Trouble lsp_references<CR>", { desc = "Find references using Trouble" })
 
-vim.keymap.set("n", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
-vim.keymap.set("n", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
-vim.keymap.set("x", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
-vim.keymap.set("x", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
-vim.keymap.set(
-  "n",
-  "<C-h>",
-  "<cmd>lua require('barbecue.ui').navigate(-2)<CR>",
-  { noremap = true, desc = "Eat a Piece of your BBQ" }
-)
+-- vim.keymap.set("n", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
+-- vim.keymap.set("n", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
+-- vim.keymap.set("x", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
+-- vim.keymap.set("x", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
+
+-- Next opening brace: Ctrl+.
+vim.keymap.set("n", "<C-j>", function()
+  vim.fn.search("[([{<]", "W")
+end, {
+  desc = "Next opening brace",
+  silent = true,
+})
+
+-- Previous opening brace: Ctrl+;
+vim.keymap.set("n", "<C-k>", function()
+  vim.fn.search("[([{<]", "bW")
+end, {
+  desc = "Prev opening brace",
+  silent = true,
+})
 
 -- remove terminal mappings
 nomap("n", "<leader>h")

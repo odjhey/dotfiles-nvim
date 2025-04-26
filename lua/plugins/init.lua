@@ -1,3 +1,5 @@
+local isLight = false
+
 return {
   {
     "nvim-lua/plenary.nvim",
@@ -214,6 +216,8 @@ return {
         "javascript",
         "typescript",
         "tsx",
+        "yaml",
+        "dockerfile",
       },
       matchup = {
         enable = true, -- mandatory, false will disable the whole extension
@@ -419,13 +423,23 @@ return {
   -- { "mhartington/oceanic-next" },
   -- { "bluz71/vim-moonfly-colors" },
   -- { "sainnhe/sonokai" },
-  -- { "ellisonleao/gruvbox.nvim" },
+  {
+    "ellisonleao/gruvbox.nvim",
+    enabled = isLight,
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.o.background = "light"
+      vim.cmd [[colorscheme gruvbox]]
+    end,
+  },
   -- { "NLKNguyen/papercolor-theme" },
   -- { "catppuccin/nvim", name = "catppuccin" },
   {
     "Shatur/neovim-ayu",
+    enabled = not isLight,
     lazy = false,
-    priority = 1000, -- recommended if you use tairiki as your default theme
+    priority = 1000,
     config = function()
       vim.o.background = "dark" -- or "light" for light mode
       vim.cmd [[colorscheme ayu-dark]]
@@ -519,5 +533,12 @@ return {
     opts = function()
       return require "configs.telescope"
     end,
+  },
+
+  -- inlay hints at the end
+  {
+    "chrisgrieser/nvim-lsp-endhints",
+    event = "LspAttach",
+    opts = {}, -- required, even if empty
   },
 }
