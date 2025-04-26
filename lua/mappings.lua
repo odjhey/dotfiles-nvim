@@ -176,13 +176,13 @@ map("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous Buffer" })
 -- i don't think we're using this, we're mostly on <l>tt
 map("n", "gR", "<cmd>Trouble lsp_references<CR>", { desc = "Find references using Trouble" })
 
--- vim.keymap.set("n", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
--- vim.keymap.set("n", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
--- vim.keymap.set("x", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
--- vim.keymap.set("x", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
+vim.keymap.set("n", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
+vim.keymap.set("n", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
+vim.keymap.set("x", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
+vim.keymap.set("x", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
 
 -- Next opening brace: Ctrl+.
-vim.keymap.set("n", "<C-j>", function()
+vim.keymap.set("n", "<leader>j", function()
   vim.fn.search("[([{<]", "W")
 end, {
   desc = "Next opening brace",
@@ -190,7 +190,7 @@ end, {
 })
 
 -- Previous opening brace: Ctrl+;
-vim.keymap.set("n", "<C-k>", function()
+vim.keymap.set("n", "<leader>k", function()
   vim.fn.search("[([{<]", "bW")
 end, {
   desc = "Prev opening brace",
