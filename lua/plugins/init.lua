@@ -333,7 +333,9 @@ return {
         "s",
         mode = { "n", "o" },
         function()
-          require("flash").treesitter() -- { jump = {pos = "start" }} -- use o to go end and start { labels = "hjkluionm," }
+          require("flash").treesitter({
+            labels = "ajkl",
+          }) -- { jump = {pos = "start" }} -- use o to go end and start { labels = "hjkluionm," }
         end,
         desc = "Flash Treesitter",
       },

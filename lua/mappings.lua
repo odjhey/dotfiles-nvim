@@ -383,3 +383,76 @@ local function jump_file_history()
 end
 
 jump_file_history()
+
+-- Create a module table if you want to keep things organized.
+local T = {}
+
+-- Function to open a Telescope picker with the list of diff files.
+local function open_diff_files(diff_files)
+  local pickers = require "telescope.pickers"
+  local finders = require "telescope.finders"
+  local conf = require("telescope.config").values
+  local actions = require "telescope.actions"
+  local action_state = require "telescope.actions.state"
+
+  pickers
+    .new({}, {
+      prompt_title = "Changed Files",
+      finder = finders.new_table {
+        results = diff_files,
+      },
+      sorter = conf.generic_sorter {},
+      attach_mappings = function(prompt_bufnr, map)
+        actions.select_default:replace(function()
+          local selection = action_state.get_selected_entry()
+          actions.close(prompt_bufnr)
+          vim.cmd("edit " .. vim.fn.fnameescape(selection[1]))
+        end)
+        return true
+      end,
+    })
+    :find()
+end
+
+-- Main function: pick a branch, then show changed files between that branch and the current branch.
+function T.compare_branch_diff_files()
+  local actions = require "telescope.actions"
+  local action_state = require "telescope.actions.state"
+  require("telescope.builtin").git_branches {
+    prompt_title = "Compare with Branch",
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+        local selected_branch = selection.value
+
+        -- Get current branch name.
+        local current_branch = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
+        if current_branch == nil or current_branch == "" then
+          print "Not in a git repository or unable to determine current branch"
+          return
+        end
+
+        -- Get list of changed files between current branch and selected branch.
+        local diff_cmd = "git diff --name-only " .. selected_branch .. "..." .. current_branch
+        print(diff_cmd)
+        local diff_files = vim.fn.systemlist(diff_cmd)
+        if vim.v.shell_error ~= 0 then
+          print "Error running git diff"
+          return
+        end
+
+        if #diff_files == 0 then
+          print("No differences found between " .. current_branch .. " and " .. selected_branch)
+          return
+        end
+
+        open_diff_files(diff_files)
+      end)
+      return true
+    end,
+  }
+end
+
+-- Set the mapping: <leader>fg will run our function.
+vim.keymap.set("n", "<leader>fg", T.compare_branch_diff_files, { desc = "Compare branch and open diff files" })
