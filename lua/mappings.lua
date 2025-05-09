@@ -4,6 +4,27 @@ require "nvchad.mappings"
 local map = vim.keymap.set
 local nomap = vim.keymap.del
 
+-- remove terminal mappings
+nomap("n", "<leader>h")
+nomap("n", "<leader>v")
+nomap("n", "<M-i>")
+nomap("n", "<M-v>")
+nomap("n", "<M-h>")
+
+-- quick todo, open ~/scratch/todo.md and append with the current date using :r !date
+map("n", "<leader>t", function()
+  local file = "~/scratch/todo.md"
+  local cmd = string.format('echo "### $(date)" >> %s', file)
+  vim.fn.system(cmd)
+  vim.cmd(string.format("edit %s", file))
+end, { desc = "Todo Open" })
+
+-- swap = and + on visual mode
+vim.keymap.set("n", "<A-j>", "+", { noremap = true })
+vim.keymap.set("n", "<A-k>", "-", { noremap = true })
+vim.keymap.set("n", "<C-e>", "3<C-e>", { noremap = true })
+vim.keymap.set("n", "<C-y>", "3<C-y>", { noremap = true })
+
 -- we need <c-i> and apparently, tab is <c-i> in terminal
 nomap("n", "<TAB>")
 map("n", "<leader>sf", ":Navbuddy<CR>", { desc = "Open NavBuddy" })
@@ -113,8 +134,8 @@ map(
 )
 
 -- quick fix
-map("n", "<C-H>", ":cpf<CR>", { noremap = true, silent = true, desc = "quickfix prev file" })
-map("n", "<C-L>", ":cnf<CR>", { noremap = true, silent = true, desc = "quickfix next file" })
+map("n", "<A-h>", ":cnf<CR>", { noremap = true, silent = true, desc = "quickfix next file" })
+map("n", "<A-l>", ":cpf<CR>", { noremap = true, silent = true, desc = "quickfix prev file" })
 map("n", "<leader>co", ":copen<CR>", { noremap = true, silent = true, desc = "quickfix open" })
 map("n", "<leader>cx", "<cmd>cclose<CR>", { noremap = true, silent = true, desc = "Quickfix: Close" })
 map("n", "<leader>cr", "<cmd>call setqflist([])<CR>", { noremap = true, silent = true, desc = "Quickfix: Clear" })
@@ -174,35 +195,34 @@ map("n", "<leader>bp", ":bprevious<CR>", { desc = "Previous Buffer" })
 
 -- Override
 -- i don't think we're using this, we're mostly on <l>tt
-map("n", "gR", "<cmd>Trouble lsp_references<CR>", { desc = "Find references using Trouble" })
+-- map("n", "gR", "<cmd>Trouble lsp_references<CR>", { desc = "Find references using Trouble" })
 
-vim.keymap.set("n", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
-vim.keymap.set("n", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
+vim.keymap.set("n", "<C-j>", "5+", { noremap = true, desc = "Jump 5 lines down" })
+vim.keymap.set("n", "<C-k>", "5-", { noremap = true, desc = "Jump 5 lines up" })
 vim.keymap.set("x", "<C-j>", "5j", { noremap = true, desc = "Jump 5 lines down" })
 vim.keymap.set("x", "<C-k>", "5k", { noremap = true, desc = "Jump 5 lines up" })
 
--- Next opening brace: Ctrl+.
-vim.keymap.set("n", "<leader>j", function()
-  vim.fn.search("[([{<]", "W")
+-- Next opening brace (with count)
+vim.keymap.set("n", "<C-l>", function()
+  local cnt = vim.v.count1
+  for _ = 1, cnt do
+    vim.fn.search("[([{<]", "W")
+  end
 end, {
-  desc = "Next opening brace",
+  desc = "Next opening brace (with count)",
   silent = true,
 })
 
--- Previous opening brace: Ctrl+;
-vim.keymap.set("n", "<leader>k", function()
-  vim.fn.search("[([{<]", "bW")
+-- Previous opening brace (with count)
+vim.keymap.set("n", "<C-h>", function()
+  local cnt = vim.v.count1
+  for _ = 1, cnt do
+    vim.fn.search("[([{<]", "bW")
+  end
 end, {
-  desc = "Prev opening brace",
+  desc = "Prev opening brace (with count)",
   silent = true,
 })
-
--- remove terminal mappings
-nomap("n", "<leader>h")
-nomap("n", "<leader>v")
-nomap("n", "<M-i>")
-nomap("n", "<M-v>")
-nomap("n", "<M-h>")
 
 map(
   "n",
@@ -253,22 +273,6 @@ local user = {
 for key, value in pairs(user.n) do
   map("n", key, value[1], { desc = value[2] })
 end
-
-local harpoon = require "harpoon"
--- REQUIRED
-harpoon:setup()
--- REQUIRED
-
--- stylua: ignore start
-vim.keymap.set("n", "<leader>ha", function() harpoon:list():add() end, { desc = "Add mark to harpoon" })
-vim.keymap.set("n", "<leader>hh", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = "list harpoons" })
-vim.keymap.set("n", "<leader>hp", function() harpoon:list():prev() end, { desc = "prev harpoon" })
-vim.keymap.set("n", "<leader>hn", function() harpoon:list():next() end, { desc = "next harpoon" })
-vim.keymap.set("n", "<leader>h1", function() harpoon:list():select(1) end, {desc ="select harpoon 1"})
-vim.keymap.set("n", "<leader>h2", function() harpoon:list():select(2) end, {desc ="select harpoon 2"})
-vim.keymap.set("n", "<leader>h3", function() harpoon:list():select(3) end, {desc ="select harpoon 3"})
-vim.keymap.set("n", "<leader>h4", function() harpoon:list():select(4) end, {desc ="select harpoon 4"})
--- stylua: ignore end
 
 -- i gave up trying to find why c-space doesn't resolve to cmp complete
 vim.keymap.set("i", "<C-n>", function()
@@ -459,3 +463,76 @@ vim.keymap.set("n", "<leader>fg", T.compare_branch_diff_files, { desc = "Compare
 
 -- lol sometimes i don't want to overwrite my yank register when pasting over text
 map("x", "<leader>p", '"_dP', { desc = "Paste without overwriting yank register" })
+
+-- REQUIRED
+local harpoon = (require "harpoon")
+harpoon:setup()
+vim.keymap.set("n", "<leader>ha", function()
+  harpoon:list():add()
+end, { desc = "harpoon add" })
+vim.keymap.set("n", "<leader>hh", function()
+  harpoon.ui:toggle_quick_menu(harpoon:list())
+end, { desc = "harpoon toggle" })
+-- REQUIRED
+
+-- Bind z0–z3 to set &foldlevel to 0–3
+for i = 0, 5 do
+  vim.keymap.set("n", "<leader>z" .. i, function()
+    vim.opt.foldlevel = i
+  end, { noremap = true, silent = true, desc = "Set foldlevel to " .. i })
+end
+
+-- repeat like . but in visual
+-- still unsure if this is a good idea, end goal is to have a repeatable suffix of c/v/d commands
+-- 1) remember the last text-object suffix
+local last_to = nil
+
+-- stylua: ignore
+-- 2) the text‐objects you want to capture (including tags)
+local to_list = {
+  'i"', 'a"',   -- inside/around double‐quotes
+  "i'", "a'",   -- inside/around single‐quotes
+  "i`", "a`",   -- inside/around backtick
+  'i)', 'a)',   -- inside/around parentheses
+  'i]', 'a]',   -- inside/around brackets
+  'i}', 'a}',   -- inside/around braces
+  'i(', 'a(',   -- alternate for parentheses
+  'it', 'at',   -- inside/around HTML/XML tags
+}
+
+-- 3) wrap and record all your v… d… c… mappings
+for _, op in ipairs { "v", "d", "c" } do
+  for _, to in ipairs(to_list) do
+    local lhs = op .. to
+    vim.keymap.set("n", lhs, function()
+      last_to = to
+      -- actually perform the operation
+      vim.api.nvim_feedkeys(lhs, "n", true)
+    end, { noremap = true, silent = true, desc = ("Record & run " .. lhs) })
+  end
+end
+
+-- 4) now map v. d. c. to re-invoke that last text-object op
+vim.keymap.set("n", "v.", function()
+  if last_to then
+    vim.api.nvim_feedkeys("v" .. last_to, "n", true)
+  else
+    vim.notify("No v… text-object recorded yet", vim.log.levels.WARN)
+  end
+end, { noremap = true, silent = true, desc = "Repeat last v… text-object" })
+
+vim.keymap.set("n", "d.", function()
+  if last_to then
+    vim.api.nvim_feedkeys("d" .. last_to, "n", true)
+  else
+    vim.notify("No d… text-object recorded yet", vim.log.levels.WARN)
+  end
+end, { noremap = true, silent = true, desc = "Repeat last d… text-object" })
+
+vim.keymap.set("n", "c.", function()
+  if last_to then
+    vim.api.nvim_feedkeys("c" .. last_to, "n", true)
+  else
+    vim.notify("No c… text-object recorded yet", vim.log.levels.WARN)
+  end
+end, { noremap = true, silent = true, desc = "Repeat last c… text-object" })

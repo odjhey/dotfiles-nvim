@@ -168,7 +168,7 @@ return {
       incremental_selection = {
         enable = true,
         keymaps = {
-          init_selection = "vz",
+          init_selection = "vv",
           node_incremental = "z",
           scope_incremental = "va",
           node_decremental = "Z",
@@ -300,7 +300,9 @@ return {
     cmd = "WhichKey",
     opts = function()
       -- dofile(vim.g.base46_cache .. "whichkey")
-      return {}
+      return {
+        delay = 10,
+      }
     end,
   },
 
@@ -318,54 +320,50 @@ return {
     "folke/flash.nvim",
     event = "VeryLazy",
     ---@type Flash.Config
-    opts = {},
-    -- stylua: ignore
-    keys = {
-      {
-        "S",
-        mode = { "n", "o" },
-        function()
-          require("flash").jump()
-        end,
-        desc = "Flash",
+    opts = {
+      jump = { autojump = true },
+      highlight = {
+        backdrop = false,
       },
+      modes = {
+        char = {
+          highlight = {
+            backdrop = false,
+          },
+        },
+      },
+    },
+    keys = {
       {
         "s",
         mode = { "n", "o" },
         function()
-          require("flash").treesitter({
-            labels = "ajkl",
-          }) -- { jump = {pos = "start" }} -- use o to go end and start { labels = "hjkluionm," }
+          require("flash").jump {
+            labels = "jklnmuio",
+            -- no backdrop
+          }
+        end,
+        desc = "Flash",
+      },
+      {
+        "S",
+        mode = { "n", "o" },
+        function()
+          require("flash").treesitter {
+            labels = "ajklsdfnm",
+          } -- { jump = {pos = "start" }} -- use o to go end and start { labels = "hjkluionm," }
         end,
         desc = "Flash Treesitter",
       },
-      {
-        "r",
-        mode = "o",
-        function()
-          require("flash").remote()
-        end,
-        desc = "Remote Flash",
-      },
-      {
-        "R",
-        mode = { "o", "x" },
-        function()
-          require("flash").treesitter_search()
-        end,
-        desc = "Treesitter Search",
-      },
-      {
-        "<c-s>",
-        mode = { "c" },
-        function()
-          require("flash").toggle()
-        end,
-        desc = "Toggle Flash Search",
-      },
     },
+    config = function(_, opts)
+      require("flash").setup(opts)
+      -- make the trigger key (label) red on white
+      vim.api.nvim_set_hl(0, "FlashLabel", { fg = "#000000", bg = "#FFFF00", bold = true })
+    end,
   },
 
+  -- sometimes we use it when reading code, but mostly rely on <leader>fc (list dirty git files)
   {
     "ThePrimeagen/harpoon",
     branch = "harpoon2",
@@ -473,7 +471,7 @@ return {
     },
     opts = {
       window = {
-        size = "60%",
+        size = "90%",
       },
       lsp = { auto_attach = true },
     },
@@ -542,5 +540,20 @@ return {
     "chrisgrieser/nvim-lsp-endhints",
     event = "LspAttach",
     opts = {}, -- required, even if empty
+  },
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    ---@type snacks.Config
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+      bigfile = { enabled = true },
+      indent = { enabled = true },
+      quickfile = { enabled = true },
+      scope = { enabled = true },
+    },
   },
 }

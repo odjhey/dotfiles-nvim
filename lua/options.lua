@@ -11,6 +11,9 @@ o.listchars = "tab:▸\\ ,trail:·,extends:>,precedes:<,nbsp:␣"
 o.foldmethod = "expr"
 o.foldexpr = "nvim_treesitter#foldexpr()"
 o.foldlevel = 999
+-- since we are using auto formatters, lets fold by index
+o.foldmethod = "indent"
+
 o.scrolloff = 2
 
 -- local navic = require "nvim-navic"
@@ -29,3 +32,9 @@ o.scrolloff = 2
 -- triggers CursorHold event faster
 vim.opt.updatetime = 200
 
+-- relative number
+o.relativenumber = true
+
+o.cursorline = true
+o.cursorlineopt = "both"
+o.colorcolumn = "92"

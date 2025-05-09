@@ -5,12 +5,12 @@
 local M = {}
 
 M.base46 = {
-  theme = "material-darker", -- default theme
+  theme = "ayu_dark", -- default theme
   integrations = { "diffview", "telescope", "treesitter", "lsp" },
 }
 
 M.ui = {
-  theme = "material-darker", -- default theme
+  theme = "ayu_dark", -- default theme
 
   -- hl_override = {
   -- 	Comment = { italic = true },
