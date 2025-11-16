@@ -339,22 +339,21 @@ return {
         mode = { "n", "o" },
         function()
           require("flash").jump {
-            labels = "jklnmuio",
-            -- no backdrop
+            labels = "jklhnmyupasdfgqwertzxcvb",
           }
         end,
         desc = "Flash",
       },
-      {
-        "S",
-        mode = { "n", "o" },
-        function()
-          require("flash").treesitter {
-            labels = "ajklsdfnm",
-          } -- { jump = {pos = "start" }} -- use o to go end and start { labels = "hjkluionm," }
-        end,
-        desc = "Flash Treesitter",
-      },
+      -- {
+      --   "S",
+      --   mode = { "n", "o" },
+      --   function()
+      --     require("flash").treesitter {
+      --       labels = "ajklsdfnm",
+      --     } -- { jump = {pos = "start" }} -- use o to go end and start { labels = "hjkluionm," }
+      --   end,
+      --   desc = "Flash Treesitter",
+      -- },
     },
     config = function(_, opts)
       require("flash").setup(opts)
@@ -555,5 +554,74 @@ return {
       quickfile = { enabled = true },
       scope = { enabled = true },
     },
+  },
+  -- Lua
+  {
+    "folke/twilight.nvim",
+    cmd = { "Twilight" },
+    opts = {
+      dimming = {
+        alpha = 0.20, -- how much to dim (0 = transparent, 1 = opaque)
+        inactive = false, -- keep syntax highlighting
+      },
+    },
+  },
+
+  {
+    "stevearc/oil.nvim",
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { "echasnovski/mini.icons", opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+    -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+    lazy = false,
+  },
+
+  {
+
+    "sphamba/smear-cursor.nvim",
+    lazy = false,
+    opts = {
+      -- cursor_color = "#d3cdc3",
+      cursor_color = "none",
+    },
+  },
+  {
+    "ya2s/nvim-cursorline",
+    lazy = false,
+    opts = {
+      cursorline = {
+        enable = true,
+        timeout = 1000,
+        number = true,
+      },
+    },
+  },
+  {
+    "petertriho/nvim-scrollbar",
+    lazy = false,
+    opts = {},
+  },
+  {
+    "kevinhwang91/nvim-hlslens",
+    lazy = false,
+    opts = {},
+  },
+  {
+    "chentoast/marks.nvim",
+    event = "VeryLazy",
+    opts = {},
+  },
+
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    build = "cd app && yarn install",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+    end,
+    ft = { "markdown" },
   },
 }

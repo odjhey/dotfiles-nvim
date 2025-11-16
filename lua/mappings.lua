@@ -11,13 +11,14 @@ nomap("n", "<M-i>")
 nomap("n", "<M-v>")
 nomap("n", "<M-h>")
 
--- quick todo, open ~/scratch/todo.md and append with the current date using :r !date
-map("n", "<leader>t", function()
-  local file = "~/scratch/todo.md"
-  local cmd = string.format('echo "### $(date)" >> %s', file)
-  vim.fn.system(cmd)
-  vim.cmd(string.format("edit %s", file))
-end, { desc = "Todo Open" })
+-- don't need for now, also gets in the way of "tab" related mappings
+-- -- quick todo, open ~/scratch/todo.md and append with the current date using :r !date
+-- map("n", "<leader>t", function()
+--   local file = "~/scratch/todo.md"
+--   local cmd = string.format('echo "### $(date)" >> %s', file)
+--   vim.fn.system(cmd)
+--   vim.cmd(string.format("edit %s", file))
+-- end, { desc = "Todo Open" })
 
 -- swap = and + on visual mode
 vim.keymap.set("n", "<A-j>", "+", { noremap = true })
@@ -178,6 +179,7 @@ map("n", "<leader>gp", "<cmd>lua require('gitsigns').preview_hunk()<CR>", { desc
 map("n", "<leader>ga", "<cmd>lua require('gitsigns').stage_hunk()<CR>", { desc = "Stage hunk" })
 map("n", "<leader>gu", "<cmd>lua require('gitsigns').undo_stage_hunk()<CR>", { desc = "Undo stage hunk" })
 map("n", "<leader>gr", "<cmd>lua require('gitsigns').reset_hunk()<CR>", { desc = "Reset hunk" })
+map("n", "<leader>gt", "<cmd>lua require('gitsigns').toggle_current_line_blame()<CR>", { desc = "Reset hunk" })
 map("n", "]g", "<cmd>lua require('gitsigns').next_hunk()<CR>", { desc = "Next Hunk" })
 map("n", "[g", "<cmd>lua require('gitsigns').prev_hunk()<CR>", { desc = "Prev Hunk" })
 map("n", "<leader>gA", "<cmd>DiffviewOpen<CR>", { desc = "Stage hunk" })
@@ -273,6 +275,17 @@ local user = {
 for key, value in pairs(user.n) do
   map("n", key, value[1], { desc = value[2] })
 end
+
+vim.keymap.set("x", "<leader>n", function()
+  local start_line = vim.fn.line "'<"
+  local end_line = vim.fn.line "'>"
+  local i = 1
+  for l = start_line, end_line do
+    local line = vim.fn.getline(l)
+    vim.fn.setline(l, i .. " " .. line)
+    i = i + 1
+  end
+end, { desc = "Number selected lines" })
 
 -- i gave up trying to find why c-space doesn't resolve to cmp complete
 vim.keymap.set("i", "<C-n>", function()
@@ -536,3 +549,31 @@ vim.keymap.set("n", "c.", function()
     vim.notify("No c… text-object recorded yet", vim.log.levels.WARN)
   end
 end, { noremap = true, silent = true, desc = "Repeat last c… text-object" })
+
+vim.keymap.set("n", "<leader>vh", function()
+  vim.api.nvim_set_hl(0, "CursorLine", { bg = "#1f2730" })
+end, { desc = "Toggle bright Visual highlight" })
+
+local bright_on = false
+local function set_bright_cursorline()
+  local bg = vim.o.background -- "dark" or "light"
+
+  if vim.o.background == "dark" then
+    vim.api.nvim_set_hl(0, "CursorLine", { bg = "#40464d" }) -- bright yellow for dark bg
+  else
+    vim.api.nvim_set_hl(0, "CursorLine", { bg = "#d7d7d7" }) -- soft yellow for light bg
+  end
+end
+vim.keymap.set("n", "<leader>cl", function()
+  bright_on = not bright_on
+  if bright_on then
+    set_bright_cursorline()
+    vim.notify("💡 Bright cursorline ON", vim.log.levels.INFO)
+  else
+    vim.cmd "hi clear CursorLine"
+    vim.api.nvim_set_hl(0, "CursorLine", { bg = "#1e242b" }) -- normal subtle one
+    vim.notify("💤 Bright cursorline OFF", vim.log.levels.INFO)
+  end
+end, { desc = "Toggle bright cursorline for presentation" })
+
+vim.keymap.set("n", "<leader>tw", "<cmd>Twilight<CR>", { desc = "Toggle dimming" })

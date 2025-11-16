@@ -38,3 +38,6 @@ o.relativenumber = true
 o.cursorline = true
 o.cursorlineopt = "both"
 o.colorcolumn = "92"
+
+-- use the light slash for diff filler
+vim.opt.fillchars:append { diff = "╱" }

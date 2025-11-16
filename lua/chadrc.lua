@@ -6,6 +6,8 @@ local M = {}
 
 M.base46 = {
   theme = "ayu_dark", -- default theme
+  -- theme = "ayu_dark", -- default theme
+  -- theme = "ayu_dark", -- default theme
   integrations = { "diffview", "telescope", "treesitter", "lsp" },
 }
 
@@ -16,6 +18,9 @@ M.ui = {
   -- 	Comment = { italic = true },
   -- 	["@comment"] = { italic = true },
   -- },
+  tabufline = {
+    enabled = false,
+  },
 }
 
 return M
