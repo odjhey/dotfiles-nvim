@@ -2,8 +2,7 @@ local on_attach = require("nvchad.configs.lspconfig").on_attach
 local on_init = require("nvchad.configs.lspconfig").on_init
 local capabilities = require("nvchad.configs.lspconfig").capabilities
 
-local lspconfig = require "lspconfig"
-local servers = { "html", "cssls", "biome", "yamlls", "jsonls" }
+local servers = { "html", "cssls", "biome", "yamlls", "jsonls", "pyright", "ruff", "expert" }
 
 -- do not steal focus on current window on gr
 vim.lsp.handlers["textDocument/references"] = function(err, result, ctx, config)
@@ -28,28 +27,30 @@ end
 
 -- lsps with default config
 for _, lsp in ipairs(servers) do
-  lspconfig[lsp].setup {
+  vim.lsp.config[lsp] = {
     on_attach = on_attach,
     on_init = on_init,
     capabilities = capabilities,
   }
 end
 
-lspconfig.denols.setup {
+vim.lsp.config.denols = {
+  cmd = { "deno", "lsp" },
+  root_markers = { "deno.json", "deno.jsonc" },
   on_attach = on_attach,
-  root_dir = lspconfig.util.root_pattern("deno.json", "deno.jsonc"),
   on_init = on_init,
   capabilities = capabilities,
 }
 
 local navic = require "nvim-navic"
-lspconfig.ts_ls.setup {
+vim.lsp.config.ts_ls = {
+  cmd = { "typescript-language-server", "--stdio" },
+  root_markers = { "package.json" },
+  single_file_support = false,
   on_attach = function(client, bufnr)
     navic.attach(client, bufnr)
     on_attach(client, bufnr)
   end,
-  root_dir = lspconfig.util.root_pattern "package.json",
-  single_file_support = false,
   on_init = on_init,
   capabilities = capabilities,
   settings = {
@@ -78,14 +79,15 @@ lspconfig.ts_ls.setup {
   },
 }
 
--- lspconfig.biome.setup {
+-- vim.lsp.config.biome = {
 --   cmd = { "biome", "lsp" },
 --   filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "json" },
---   root_dir = require("lspconfig.util").root_pattern(".biomerc", ".biomerc.json", "package.json"),
+--   root_markers = { ".biomerc", ".biomerc.json", "package.json" },
 --   settings = {},
 -- }
 
-lspconfig["eslint"].setup {
+vim.lsp.config.eslint = {
+  cmd = { "vscode-eslint-language-server", "--stdio" },
   on_attach = function(client, bufnr)
     vim.api.nvim_create_autocmd("BufWritePre", {
       buffer = bufnr,
@@ -123,3 +125,12 @@ lspconfig["eslint"].setup {
 --     },
 --   },
 -- }
+--
+
+vim.lsp.config("expert", {
+  cmd = { "expert", "--stdio" },
+  root_markers = { "mix.exs", ".git" },
+  filetypes = { "elixir", "eelixir", "heex" },
+})
+
+vim.lsp.enable "expert"

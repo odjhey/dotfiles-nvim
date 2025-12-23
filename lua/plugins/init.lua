@@ -135,6 +135,7 @@ return {
     "williamboman/mason.nvim",
     opts = {
       ensure_installed = {
+        "expert",
         "typescript-language-server",
         "tailwindcss-language-server",
         "eslint_d",
@@ -219,6 +220,7 @@ return {
         "yaml",
         "dockerfile",
         "gdscript",
+        "elixir",
       },
       matchup = {
         enable = true, -- mandatory, false will disable the whole extension
@@ -250,18 +252,19 @@ return {
     end,
   },
 
-  {
-    "luckasRanarison/tailwind-tools.nvim",
-    name = "tailwind-tools",
-    build = ":UpdateRemotePlugins",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-telescope/telescope.nvim", -- optional
-      "neovim/nvim-lspconfig", -- optional
-    },
-    opts = {}, -- your configuration
-    lazy = false,
-  },
+  -- HMMM repo is archived: This repository was archived by the owner on Aug 29, 2025. It is now read-only.
+  -- {
+  --   "luckasRanarison/tailwind-tools.nvim",
+  --   name = "tailwind-tools",
+  --   build = ":UpdateRemotePlugins",
+  --   dependencies = {
+  --     "nvim-treesitter/nvim-treesitter",
+  --     "nvim-telescope/telescope.nvim", -- optional
+  --     "neovim/nvim-lspconfig", -- optional
+  --   },
+  --   opts = {}, -- your configuration
+  --   lazy = false,
+  -- },
 
   {
     "folke/todo-comments.nvim",
@@ -394,13 +397,23 @@ return {
   {
     "nvim-telescope/telescope-frecency.nvim",
     lazy = false,
-    -- install the latest stable version
     version = "*",
-    opts = {
-      matcher = "fuzzy",
-    },
     dependencies = { "nvim-telescope/telescope.nvim" },
     config = function()
+      require("telescope").setup {
+        extensions = {
+          frecency = {
+            matcher = "fuzzy",
+            ignore_patterns = {
+              "*/node_modules/*",
+              "*/.git/*",
+              "*/dist/*",
+              "*/build/*",
+            },
+          },
+        },
+      }
+
       require("telescope").load_extension "frecency"
     end,
   },

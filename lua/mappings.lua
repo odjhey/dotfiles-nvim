@@ -27,7 +27,6 @@ vim.keymap.set("n", "<C-e>", "3<C-e>", { noremap = true })
 vim.keymap.set("n", "<C-y>", "3<C-y>", { noremap = true })
 
 -- we need <c-i> and apparently, tab is <c-i> in terminal
-nomap("n", "<TAB>")
 map("n", "<leader>sf", ":Navbuddy<CR>", { desc = "Open NavBuddy" })
 
 local function telescope()
@@ -187,8 +186,6 @@ map("n", "<leader>gf", "<cmd>Git add %<CR>", { desc = "Add file" })
 map("n", "<leader>gg", "<cmd>Neogit<CR>", { desc = "Git Neogit" })
 
 -- Buffers
-nomap("n", "<leader>x")
-nomap("n", "<leader>b")
 map("n", "<leader>bo", ":%bd|e#<CR>", { noremap = true, silent = true, desc = "Close Other Buffers" })
 map("n", "<leader>bd", ":bd<CR>", { noremap = true, silent = true, desc = "Close Buffer" })
 map("n", "<leader>bl", "<cmd>Telescope buffers<CR>", { desc = "List Buffers" })
