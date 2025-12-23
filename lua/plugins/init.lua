@@ -219,6 +219,7 @@ return {
         "tsx",
         "yaml",
         "dockerfile",
+        "gdscript",
         "elixir",
       },
       matchup = {
